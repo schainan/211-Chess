@@ -40,7 +40,6 @@ public class TestedAlphaBetaFixedDepth
 			}
 			else
 			{
-				System.out.println("hi");
 				if (value < extreme)
 				{
 					extreme = value;
