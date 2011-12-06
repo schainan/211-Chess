@@ -8,7 +8,7 @@ import edu.cmu.cs211.chess.search.AbstractSearcher;
 import java.util.List;
 
 /**
- * An implementation of Alpha Beta search.
+ * An implementation of Alpha Beta search.   blahblah
  * <p/>
  * This is the class that will be unit tested by FrontDesk.
  */
