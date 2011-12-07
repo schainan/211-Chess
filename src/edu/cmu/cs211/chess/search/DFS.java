@@ -1,61 +1,61 @@
 package edu.cmu.cs211.chess.search;
 
-import java.util.List;
-
 import edu.cmu.cs211.chess.board.Board;
 import edu.cmu.cs211.chess.board.Move;
 
+import java.util.List;
+
 /**
- * An extremely basic Searcher that is used soley to count the nodes
- * visited in PerftTests.  You may want to look at this class as a
+ * An extremely basic Searcher that is used solely to count the nodes
+ * visited in PerfTests.  You may want to look at this class as a
  * template for starting NegaMax.
  */
 public class DFS
-        <
-                M extends Move<M>,
-                B extends Board<M,B>
-                >
-        extends AbstractSearcher<M,B>
+		<
+				M extends Move<M>,
+				B extends Board<M, B>
+				>
+		extends AbstractSearcher<M, B>
 {
-    public M getBestMove(B board, int myTime, int opTime)
-    {
-        nodeCount = 0;
-        leafCount = 0;
-        dfs(board, maxDepth);
-        return null; // DFS doesn't look for a best move
-    }
+	public M getBestMove(B board, int myTime, int opTime)
+	{
+		nodeCount = 0;
+		leafCount = 0;
+		dfs(board, maxDepth);
+		return null; // DFS doesn't look for a best move
+	}
 
-    private int dfs(B board, int pliesToGo)
-    {
-        ++nodeCount;
+	private int dfs(B board, int pliesToGo)
+	{
+		++nodeCount;
 
-        if (pliesToGo == 0)
-        {
-            ++leafCount;
-            return evaluator.eval(board);
-        }
+		if (pliesToGo == 0)
+		{
+			++leafCount;
+			return evaluator.eval(board);
+		}
 
-        List<M> moves = board.generateMoves();
+		List<M> moves = board.generateMoves();
 
-        if (moves.isEmpty())
-        {
-            if (board.inCheck())
-            {
-                return evaluator.mate();
-            }
-            else
-            {
-                return evaluator.stalemate();
-            }
-        }
+		if (moves.isEmpty())
+		{
+			if (board.inCheck())
+			{
+				return evaluator.mate();
+			}
+			else
+			{
+				return evaluator.stalemate();
+			}
+		}
 
-        for (M move : moves)
-        {
-            board.applyMove(move);
-            dfs(board, pliesToGo - 1);
-            board.undoMove();
-        }
-        //we don't know what the value of the best move is in DFS
-        return 0;
-    }
+		for (M move : moves)
+		{
+			board.applyMove(move);
+			dfs(board, pliesToGo - 1);
+			board.undoMove();
+		}
+		//we don't know what the value of the best move is in DFS
+		return 0;
+	}
 }

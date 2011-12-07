@@ -92,7 +92,6 @@ public class Engine
 
 		ArrayMove move = searcher.getBestMove(getBoard(), myTime, opTime);
 
-
 		return move;
 	}
 

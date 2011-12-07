@@ -12,88 +12,68 @@ import java.util.List;
  * <p/>
  * This is the class that will be unit tested by FrontDesk.
  */
-public class TestedAlphaBetaFixedDepth <M extends Move<M>, B extends Board<M, B>> extends AbstractSearcher<M, B>
+public class TestedAlphaBetaFixedDepth<M extends Move<M>, B extends Board<M, B>> extends AbstractSearcher<M, B>
 {
+	static final int MAXSTEP = ArrayBoard.WHITE;
 
 	public M getBestMove(B board, int myTime, int opTime)
 	{
 		List<M> moves = board.generateMoves();
-		if (moves.isEmpty() || maxDepth == 0) return null;
-		int minormax = board.toPlay();
-		int extreme = (minormax == ArrayBoard.WHITE) ? Integer.MIN_VALUE : Integer.MAX_VALUE;
-		M extremeMove = null;
+		int minOrMax = board.toPlay();
+		int extreme = (minOrMax == MAXSTEP) ?
+				Integer.MIN_VALUE + 1 : Integer.MAX_VALUE;
+		M bestMoveSoFar = null;
+
 		for (M move : moves)
 		{
 			board.applyMove(move);
-			int value = minimax(board, maxDepth);
-			if (minormax == ArrayBoard.WHITE)
+			int negaValue = negaMax(board, maxDepth - 1);
+			if (minOrMax == MAXSTEP)
 			{
-				if (value > extreme)
+				if (negaValue > extreme)
 				{
-					extreme = value;
-					extremeMove = move;
+					extreme = negaValue;
+					bestMoveSoFar = move;
 				}
 			}
 			else
 			{
-				if (value < extreme)
+				if (negaValue < extreme)
 				{
-					extreme = value;
-					extremeMove = move;
+					extreme = negaValue;
+					bestMoveSoFar = move;
 				}
 			}
 			board.undoMove();
 		}
-		return extremeMove;
+		return bestMoveSoFar;
 	}
 
-
-	private int minimax(B board, int depth)
+	private int negaMax(B board, int depth)
 	{
 		if (depth == 0)
-		{
 			return evaluator.eval(board);
-		}
 
 		List<M> moves = board.generateMoves();
 
 		if (moves.isEmpty())
 		{
 			if (board.inCheck())
-			{
-				return evaluator.mate();
-			}
+				return -evaluator.mate();
 			else
-			{
-				return evaluator.stalemate();
-			}
+				return -evaluator.stalemate();
 		}
-		int minormax = board.toPlay();
-		int extreme = (minormax == ArrayBoard.WHITE) ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+
+		int max = Integer.MIN_VALUE + 1;
+		int score;
 		for (M move : moves)
 		{
 			board.applyMove(move);
-			int value = minimax(board, depth - 1);
-
-			if (minormax == ArrayBoard.WHITE)
-			{
-				if (value < extreme)
-				{
-					extreme = value;
-				}
-			}
-			else
-			{
-				if (value > extreme)
-				{
-					extreme = value;
-				}
-			}
+			score = -negaMax(board, depth - 1);
+			if (score > max)
+				max = score;
 			board.undoMove();
 		}
-		return extreme;
-
-
+		return max;
 	}
-
 }
