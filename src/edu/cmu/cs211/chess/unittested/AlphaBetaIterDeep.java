@@ -3,6 +3,8 @@ package edu.cmu.cs211.chess.unittested;
 import edu.cmu.cs211.chess.board.Board;
 import edu.cmu.cs211.chess.board.Move;
 import edu.cmu.cs211.chess.search.AbstractSearcher;
+import edu.cmu.cs211.chess.search.SimpleTimer;
+import edu.cmu.cs211.chess.search.Timer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,32 +14,84 @@ import java.util.List;
  */
 public class AlphaBetaIterDeep<M extends Move<M>, B extends Board<M, B>> extends AbstractSearcher<M, B>
 {
-	private static final int QUIESCENT_DEPTH = 2;
+	private static final int QUIESCENT_DEPTH = 0;
 	private static final int INITIAL_DEPTH = 3;
 
 	public M getBestMove(B board, int myTime, int opTime)
+	{
+		SimpleTimer simpleTimer = new SimpleTimer(3, 2);
+		simpleTimer.start(myTime, opTime);
+
+		M bestMoveSoFar = null;
+		int currentDepth = 2;
+		while (!simpleTimer.timeup())
+		{
+			System.out.println("depth: " + currentDepth);
+			M tempMove;
+			if ((tempMove = useIterativeDeepening(board, currentDepth, bestMoveSoFar, simpleTimer)) == null)
+				break;
+			else
+				bestMoveSoFar = tempMove;
+			currentDepth++;
+		}
+		System.out.println();
+		return bestMoveSoFar;
+	}
+
+
+	private M useIterativeDeepening(B board, int depth, M bestPreviousMove, Timer timer)
 	{
 		int negaValue;
 		List<M> moves = board.generateMoves();
 		int extreme = Integer.MAX_VALUE;
 		M bestMoveSoFar = null;
-		int calculatedDepth = INITIAL_DEPTH;
 
+		// if it's not the first call to it
+		if (timer.timeup()) return null;
 
-		for (M move : moves)
+		if (bestPreviousMove != null)
 		{
-			board.applyMove(move);
+			board.applyMove(bestPreviousMove);
 			HashMap<Long, Integer> repetitionMap = new HashMap<Long, Integer>();
 			repetitionMap.put(board.signature(), 1);
-			negaValue = negaMax(board, calculatedDepth - 1, Integer.MIN_VALUE + 1,
+			negaValue = negaMax(board, depth - 1, Integer.MIN_VALUE + 1,
 					Integer.MAX_VALUE, repetitionMap);
+
+			if (timer.timeup()) return null;
+
 			if (negaValue < extreme)
 			{
 				extreme = negaValue;
-				bestMoveSoFar = move;
-				reportNewBestMove(move);
+				bestMoveSoFar = bestPreviousMove;
+				reportNewBestMove(bestPreviousMove);
 			}
 			board.undoMove();
+		}
+
+		if (timer.timeup()) return null;
+
+		for (M move : moves)
+		{
+			if (timer.timeup()) return null;
+
+			// don't check already checked node
+			if (move != bestPreviousMove)
+			{
+				if (timer.timeup()) return null;
+
+				board.applyMove(move);
+				HashMap<Long, Integer> repetitionMap = new HashMap<Long, Integer>();
+				repetitionMap.put(board.signature(), 1);
+				negaValue = negaMax(board, depth - 1, Integer.MIN_VALUE + 1,
+						Integer.MAX_VALUE, repetitionMap);
+				if (negaValue < extreme)
+				{
+					extreme = negaValue;
+					bestMoveSoFar = move;
+					reportNewBestMove(move);
+				}
+				board.undoMove();
+			}
 		}
 		return bestMoveSoFar;
 	}
