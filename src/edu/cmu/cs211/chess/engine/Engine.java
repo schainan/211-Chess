@@ -5,7 +5,7 @@ import edu.cmu.cs211.chess.board.ArrayMove;
 import edu.cmu.cs211.chess.board.Board;
 import edu.cmu.cs211.chess.search.Searcher;
 import edu.cmu.cs211.chess.server.Hub;
-import edu.cmu.cs211.chess.unittested.AlphaBetaIterDeep;
+import edu.cmu.cs211.chess.unittested.AlphaBetaQuiescentRep;
 import edu.cmu.cs211.chess.unittested.EndGameEvaluator;
 
 import java.util.Observer;
@@ -26,7 +26,7 @@ public class Engine
 	//todo: change back to tested version
 	private Searcher<ArrayMove, ArrayBoard>
 //			searcher = new TestedAlphaBetaFixedDepth<ArrayMove, ArrayBoard>();
-			searcher = new AlphaBetaIterDeep<ArrayMove, ArrayBoard>();
+			searcher = new AlphaBetaQuiescentRep<ArrayMove, ArrayBoard>();
 
 	private EndGameEvaluator
 			//todo: change back to tested evaluator

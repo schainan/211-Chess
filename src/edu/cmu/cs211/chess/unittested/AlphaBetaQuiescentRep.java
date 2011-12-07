@@ -6,14 +6,17 @@ import edu.cmu.cs211.chess.search.AbstractSearcher;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /*
  * quiescent searching implemented
  */
 public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> extends AbstractSearcher<M, B>
 {
-	private static final int QUIESCENT_DEPTH = 4;
+	private static final int QUIESCENT_DEPTH = 2;
 	private static final int INITIAL_DEPTH = 3;
+
+	Map<Long, Integer> repetitionMap = new HashMap<Long, Integer>();
 
 	public M getBestMove(B board, int myTime, int opTime)
 	{
@@ -23,13 +26,11 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 		M bestMoveSoFar = null;
 		int calculatedDepth = INITIAL_DEPTH;
 
-
+		addDelta(board);
 		for (M move : moves)
 		{
 			board.applyMove(move);
-			HashMap<Long, Integer> repetitionMap = new HashMap<Long, Integer>();
-			repetitionMap.put(board.signature(), 1);
-			negaValue = negaMax(board, calculatedDepth - 1, Integer.MIN_VALUE + 1, Integer.MAX_VALUE, repetitionMap);
+			negaValue = negaMax(board, calculatedDepth - 1, Integer.MIN_VALUE + 1, Integer.MAX_VALUE);
 			if (negaValue < extreme)
 			{
 				extreme = negaValue;
@@ -38,7 +39,29 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 			}
 			board.undoMove();
 		}
+		board.applyMove(bestMoveSoFar);
+		addDelta(board);
+		board.undoMove();
+
 		return bestMoveSoFar;
+	}
+
+	private void addDelta(B board)
+	{
+
+		Long signature = board.signature();
+
+		// if the count of map is not null (0)
+		if (repetitionMap.containsKey(signature))
+			repetitionMap.put(signature, repetitionMap.get(signature) + 1);
+		else
+			repetitionMap.put(signature, 1);
+	}
+
+	public void removeDelta(B board)
+	{
+		Long signature = board.signature();
+		repetitionMap.put(signature, repetitionMap.get(signature) - 1);
 	}
 
 //	private int calculateDepth(int numPieces)
@@ -48,23 +71,18 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 //		else return THIRD_DEPTH;
 //	}
 
-	private int negaMax(B board, int depth, int alpha, int beta, HashMap<Long, Integer> repetitionMap)
+	private int negaMax(B board, int depth, int alpha, int beta)
 	{
 
 		if (depth == 0)
 			return quiesce(board, alpha, beta, QUIESCENT_DEPTH);
-		long signature = board.signature();
-		Integer boardCount = repetitionMap.get(signature);
 
-		if (boardCount != null && boardCount.equals(2))
-		{
-			System.out.println("saw repetition at depth: " + depth);
+		long signature = board.signature();
+
+		if ((repetitionMap.containsKey(signature)) && (repetitionMap.get(signature) == 2))
 			return 0;
-		}
-		if (boardCount == null)
-			repetitionMap.put(signature, 1);
-		else
-			repetitionMap.put(signature, boardCount + 1);
+
+		addDelta(board);
 
 		List<M> moves = board.generateMoves();
 
@@ -79,15 +97,13 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 		for (M move : moves)
 		{
 			board.applyMove(move);
-			HashMap<Long, Integer> newRepetitionTable = new HashMap<Long, Integer>(repetitionMap);
-			alpha = Math.max(alpha, -negaMax(board, depth - 1, -beta, -alpha, newRepetitionTable));
+			alpha = Math.max(alpha, -negaMax(board, depth - 1, -beta, -alpha));
 			board.undoMove();
 
 			if (alpha >= beta)
 				break; // prune
 		}
-		repetitionMap.put(signature, repetitionMap.get(signature) - 1);
-
+		removeDelta(board);
 		return alpha;
 
 	}
