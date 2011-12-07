@@ -5,8 +5,8 @@ import edu.cmu.cs211.chess.board.ArrayMove;
 import edu.cmu.cs211.chess.board.Board;
 import edu.cmu.cs211.chess.search.Searcher;
 import edu.cmu.cs211.chess.server.Hub;
+import edu.cmu.cs211.chess.unittested.EndGameEvaluator;
 import edu.cmu.cs211.chess.unittested.TestedAlphaBetaFixedDepth;
-import edu.cmu.cs211.chess.unittested.TestedEvaluator;
 
 import java.util.Observer;
 
@@ -26,9 +26,9 @@ public class Engine
 	private Searcher<ArrayMove, ArrayBoard>
 			searcher = new TestedAlphaBetaFixedDepth<ArrayMove, ArrayBoard>();
 
-	private TestedEvaluator
-			//FIXME Change back
-			eval = new TestedEvaluator();
+	private EndGameEvaluator
+			//todo: change back to tested evaluator
+			eval = new EndGameEvaluator();
 
 	private int
 			plyCount = 0;
@@ -86,7 +86,6 @@ public class Engine
 	public ArrayMove computeMove(int myTime, int opTime)
 	{
 		assert (false) : "Assertions should be disabled when playing competitively.";
-
 
 		System.out.println(eval.eval(board));
 

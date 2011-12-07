@@ -6,12 +6,10 @@ import edu.cmu.cs211.chess.search.AbstractSearcher;
 
 import java.util.List;
 
-/**
- * An implementation of Alpha Beta search.
- * <p/>
- * This is the class that will be unit tested by FrontDesk.
+/*
+ * quiescent searching implemented
  */
-public class TestedAlphaBetaFixedDepth<M extends Move<M>, B extends Board<M, B>> extends AbstractSearcher<M, B>
+public class AlphaBetaQuiescent<M extends Move<M>, B extends Board<M, B>> extends AbstractSearcher<M, B>
 {
 	public M getBestMove(B board, int myTime, int opTime)
 	{
