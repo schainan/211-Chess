@@ -1,6 +1,5 @@
 package edu.cmu.cs211.chess.unittested;
 
-import edu.cmu.cs211.chess.board.ArrayBoard;
 import edu.cmu.cs211.chess.board.Board;
 import edu.cmu.cs211.chess.board.Move;
 import edu.cmu.cs211.chess.search.AbstractSearcher;
@@ -14,35 +13,20 @@ import java.util.List;
  */
 public class TestedAlphaBetaFixedDepth<M extends Move<M>, B extends Board<M, B>> extends AbstractSearcher<M, B>
 {
-	static final int MAXSTEP = ArrayBoard.WHITE;
-
 	public M getBestMove(B board, int myTime, int opTime)
 	{
 		List<M> moves = board.generateMoves();
-		int minOrMax = board.toPlay();
-		int extreme = (minOrMax == MAXSTEP) ?
-				Integer.MIN_VALUE + 1 : Integer.MAX_VALUE;
+		int extreme = Integer.MAX_VALUE;
 		M bestMoveSoFar = null;
 
 		for (M move : moves)
 		{
 			board.applyMove(move);
 			int negaValue = negaMax(board, maxDepth - 1);
-			if (minOrMax == MAXSTEP)
+			if (negaValue < extreme)
 			{
-				if (negaValue > extreme)
-				{
-					extreme = negaValue;
-					bestMoveSoFar = move;
-				}
-			}
-			else
-			{
-				if (negaValue < extreme)
-				{
-					extreme = negaValue;
-					bestMoveSoFar = move;
-				}
+				extreme = negaValue;
+				bestMoveSoFar = move;
 			}
 			board.undoMove();
 		}
@@ -59,13 +43,9 @@ public class TestedAlphaBetaFixedDepth<M extends Move<M>, B extends Board<M, B>>
 		if (moves.isEmpty())
 		{
 			if (board.inCheck())
-			{
-				return -evaluator.mate() + 1;
-			}
+				return -evaluator.mate() + depth;
 			else
-			{
 				return -evaluator.stalemate();
-			}
 		}
 
 		int max = Integer.MIN_VALUE + 1;
