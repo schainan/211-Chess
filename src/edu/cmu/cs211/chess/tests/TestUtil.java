@@ -1,39 +1,44 @@
 package edu.cmu.cs211.chess.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import edu.cmu.cs211.chess.board.ArrayBoard;
+import edu.cmu.cs211.chess.board.ArrayMove;
+import edu.cmu.cs211.chess.unittested.AlphaBetaQuiescent;
+import edu.cmu.cs211.chess.unittested.EndGameEvaluator;
 
 import java.util.Arrays;
 import java.util.List;
 
-import edu.cmu.cs211.chess.board.ArrayBoard;
-import edu.cmu.cs211.chess.board.ArrayMove;
-import edu.cmu.cs211.chess.unittested.TestedAlphaBetaFixedDepth;
-import edu.cmu.cs211.chess.unittested.TestedEvaluator;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class TestUtil {
+public class TestUtil
+{
 
-	private static final TestedEvaluator stu_evaluator = new TestedEvaluator();
-	
-	public static void evaluatorTest(String fen, int value) {
+	// todo: change back
+	private static final EndGameEvaluator stu_evaluator = new EndGameEvaluator();
+
+	public static void evaluatorTest(String fen, int value)
+	{
 		ArrayBoard student = ArrayBoard.FACTORY.create().init(fen);
 		assertEquals(
-			"Evaluation of boards not equal (" + fen + ")",
-			value,
-			stu_evaluator.eval(student)
+				"Evaluation of boards not equal (" + fen + ")",
+				value,
+				stu_evaluator.eval(student)
 		);
 	}
 
-	public static void alphaBetaTest(String fen, int depth, String[] validMoves) {
+	// todo: change back
+	public static void alphaBetaTest(String fen, int depth, String[] validMoves)
+	{
 		ArrayBoard
-			student = ArrayBoard.FACTORY.create().init(fen);
-		TestedAlphaBetaFixedDepth<ArrayMove, ArrayBoard>
-			ab = new TestedAlphaBetaFixedDepth<ArrayMove, ArrayBoard>();
-		
+				student = ArrayBoard.FACTORY.create().init(fen);
+		AlphaBetaQuiescent<ArrayMove, ArrayBoard>
+				ab = new AlphaBetaQuiescent<ArrayMove, ArrayBoard>();
+
 		ab.setEvaluator(stu_evaluator);
 		ab.setFixedDepth(depth);
-		
-		String studMove = ab.getBestMove(student, 10000, 10000).serverString().substring(0,4);
+
+		String studMove = ab.getBestMove(student, 10000, 10000).serverString().substring(0, 4);
 
 		List<String> validMoveList = Arrays.asList(validMoves);
 

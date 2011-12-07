@@ -3,7 +3,6 @@ package edu.cmu.cs211.chess.unittested;
 import edu.cmu.cs211.chess.board.ArrayBoard;
 import edu.cmu.cs211.chess.board.ArrayPiece;
 import edu.cmu.cs211.chess.evaluation.Evaluator;
-import edu.cmu.cs211.chess.util.Iteratorable;
 
 /*
  * uses a position array for the king in the case when it is nearing end of game
@@ -55,19 +54,16 @@ public class EndGameEvaluator implements Evaluator<ArrayBoard>
 	public int eval(ArrayBoard board)
 	{
 		int whiteSum = 0, blackSum = 0;
-		Iteratorable<ArrayPiece> whitePieces = board.allPiecesOfColor(ArrayBoard.WHITE);
-		Iteratorable<ArrayPiece> blackPieces = board.allPiecesOfColor(ArrayBoard.BLACK);
-
 
 		if (board.hasCastled[ArrayBoard.BLACK]) blackSum += CASTLE_BONUS;
 		if (board.hasCastled[ArrayBoard.WHITE]) whiteSum += CASTLE_BONUS;
 
-		for (ArrayPiece p : whitePieces)
+		for (ArrayPiece p : board.allPiecesOfColor(ArrayBoard.WHITE))
 		{
 			switch (p.type())
 			{
 				case ArrayPiece.KING:
-					whiteSum += calculateWhiteKingWeight(p, whitePieces, blackPieces);
+					whiteSum += calculateWhiteKingWeight(p, board.countOfColor(ArrayBoard.WHITE), board.countOfColor(ArrayBoard.BLACK));
 					break;
 				case ArrayPiece.QUEEN:
 					whiteSum += queenval;
@@ -87,12 +83,12 @@ public class EndGameEvaluator implements Evaluator<ArrayBoard>
 			}
 		}
 
-		for (ArrayPiece p : blackPieces)
+		for (ArrayPiece p : board.allPiecesOfColor(ArrayBoard.BLACK))
 		{
 			switch (p.type())
 			{
 				case ArrayPiece.KING:
-					blackSum += calculateBlackKingWeight(p, whitePieces, blackPieces);
+					blackSum += calculateBlackKingWeight(p, board.countOfColor(ArrayBoard.WHITE), board.countOfColor(ArrayBoard.BLACK));
 					break;
 				case ArrayPiece.QUEEN:
 					blackSum += queenval;
@@ -115,42 +111,29 @@ public class EndGameEvaluator implements Evaluator<ArrayBoard>
 		return (board.toPlay() == ArrayBoard.WHITE) ? (whiteSum - blackSum) : (blackSum - whiteSum);
 	}
 
-	private int calculateWhiteKingWeight(ArrayPiece whiteKing, Iteratorable<ArrayPiece> whitePieces,
-										 Iteratorable<ArrayPiece> blackPieces)
+	private int calculateWhiteKingWeight(ArrayPiece whiteKing, int whiteCount, int blackCount)
 	{
-		boolean isBlackEndGame;
-
-		blackPieces.next();
-		isBlackEndGame = !blackPieces.hasNext();
-
-		if (isBlackEndGame) // black has only king left
+		if (blackCount == 1) // black has only king left
 			return kingpos[whiteKing.row()][whiteKing.col()] + kingval;
 
-		whitePieces.next();
-		if (whitePieces.hasNext()) // not end game for white piece
+		if (whiteCount != 1) // not end game for white piece
 			return kingval;
 		else
 			return kingval - kingpos[whiteKing.row()][whiteKing.col()];
 	}
 
-
-	private int calculateBlackKingWeight(ArrayPiece blackKing, Iteratorable<ArrayPiece> whitePieces,
-										 Iteratorable<ArrayPiece> blackPieces)
+	private int calculateBlackKingWeight(ArrayPiece blackKing, int whiteCount, int blackCount)
 	{
-		boolean isWhiteEndGame;
 
-		whitePieces.next();
-		isWhiteEndGame = !whitePieces.hasNext();
-
-		if (isWhiteEndGame) // white has only king left
+		if (whiteCount == 1) // white has only king left
 			return kingpos[7 - blackKing.row()][blackKing.col()] + kingval;
 
-		blackPieces.next();
-		if (blackPieces.hasNext()) // not end game for black piece
+		if (blackCount != 1) // not end game for black piece
 			return kingval;
 		else
 			return kingval - kingpos[7 - blackKing.row()][blackKing.col()];
 	}
+
 
 	/*
 		  * Piece value tables modify the value of each piece according to where it
@@ -220,7 +203,6 @@ public class EndGameEvaluator implements Evaluator<ArrayBoard>
 	private static final int bishopval = 300;
 	private static final int knightval = 300;
 	private static final int pawnval = 100;
-	//private static final int emptyval     = 0;
 
 	/* The bonus for castling */
 	private static final int CASTLE_BONUS = 10;

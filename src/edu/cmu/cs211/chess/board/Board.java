@@ -20,6 +20,8 @@ public interface Board
 	 */
 	public B init(String fen);
 
+	public int countOfAllPieces();
+
 	/**
 	 * Generates a list of valid moves from this board position.
 	 * Will not contain any duplicates.
