@@ -4,6 +4,7 @@ import edu.cmu.cs211.chess.board.Board;
 import edu.cmu.cs211.chess.board.Move;
 import edu.cmu.cs211.chess.search.AbstractSearcher;
 
+import java.util.HashMap;
 import java.util.List;
 
 /*
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> extends AbstractSearcher<M, B>
 {
-	private static final int QUIESCENT_DEPTH = 2;
+	private static final int QUIESCENT_DEPTH = 4;
 	private static final int INITIAL_DEPTH = 3;
 
 	public M getBestMove(B board, int myTime, int opTime)
@@ -22,10 +23,13 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 		M bestMoveSoFar = null;
 		int calculatedDepth = INITIAL_DEPTH;
 
+
 		for (M move : moves)
 		{
 			board.applyMove(move);
-			negaValue = negaMax(board, calculatedDepth - 1, Integer.MIN_VALUE + 1, Integer.MAX_VALUE);
+			HashMap<Long, Integer> repetitionMap = new HashMap<Long, Integer>();
+			repetitionMap.put(board.signature(), 1);
+			negaValue = negaMax(board, calculatedDepth - 1, Integer.MIN_VALUE + 1, Integer.MAX_VALUE, repetitionMap);
 			if (negaValue < extreme)
 			{
 				extreme = negaValue;
@@ -44,10 +48,23 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 //		else return THIRD_DEPTH;
 //	}
 
-	private int negaMax(B board, int depth, int alpha, int beta)
+	private int negaMax(B board, int depth, int alpha, int beta, HashMap<Long, Integer> repetitionMap)
 	{
+
 		if (depth == 0)
 			return quiesce(board, alpha, beta, QUIESCENT_DEPTH);
+		long signature = board.signature();
+		Integer boardCount = repetitionMap.get(signature);
+
+		if (boardCount != null && boardCount.equals(2))
+		{
+			System.out.println("saw repetition at depth: " + depth);
+			return 0;
+		}
+		if (boardCount == null)
+			repetitionMap.put(signature, 1);
+		else
+			repetitionMap.put(signature, boardCount + 1);
 
 		List<M> moves = board.generateMoves();
 
@@ -62,19 +79,23 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 		for (M move : moves)
 		{
 			board.applyMove(move);
-			alpha = Math.max(alpha, -negaMax(board, depth - 1, -beta, -alpha));
+			HashMap<Long, Integer> newRepetitionTable = new HashMap<Long, Integer>(repetitionMap);
+			alpha = Math.max(alpha, -negaMax(board, depth - 1, -beta, -alpha, newRepetitionTable));
 			board.undoMove();
 
 			if (alpha >= beta)
 				break; // prune
 		}
+		repetitionMap.put(signature, repetitionMap.get(signature) - 1);
+
 		return alpha;
+
 	}
 
 	private int quiesce(B board, int alpha, int beta, int depth)
 	{
-		int standPat = evaluator.eval(board);
 
+		int standPat = evaluator.eval(board);
 		if (depth == 0) return standPat;
 
 		List<M> moves = board.generateMoves();
@@ -92,7 +113,6 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 
 		if (alpha < standPat)
 			alpha = standPat;
-
 
 		int score;
 		for (M move : moves)
