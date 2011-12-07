@@ -12,11 +12,7 @@ import java.util.List;
  * <p/>
  * This is the class that will be unit tested by FrontDesk.
  */
-public class TestedAlphaBetaFixedDepth
-		<M extends Move<M>,
-				B extends Board<M, B>
-				>
-		extends AbstractSearcher<M, B>
+public class TestedAlphaBetaFixedDepth <M extends Move<M>, B extends Board<M, B>> extends AbstractSearcher<M, B>
 {
 
 	public M getBestMove(B board, int myTime, int opTime)

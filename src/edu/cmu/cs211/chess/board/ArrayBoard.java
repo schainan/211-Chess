@@ -1,15 +1,9 @@
 package edu.cmu.cs211.chess.board;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
 import edu.cmu.cs211.chess.util.Iteratorable;
 import edu.cmu.cs211.chess.util.Predicate;
+
+import java.util.*;
 
 import static edu.cmu.cs211.chess.board.ArrayPiece.*;
 
@@ -2084,7 +2078,7 @@ public class ArrayBoard implements Board<ArrayMove,ArrayBoard>
    * Adds a fresh piece to the board at the specified square,
    * updating the square of the specified piece.
    * 
-   * @param p the piece.
+   * @param piece the piece.
    * @param square the square to add the piece to.
    */
   protected void addPiece(ArrayPiece piece, int square)
@@ -2282,7 +2276,7 @@ public class ArrayBoard implements Board<ArrayMove,ArrayBoard>
   /**
    * Updates the file where a pawn was double pushed last move.
    * 
-   * @param file the file.
+   * @param square the file.
    */
   protected void setEnpassantSquare(int square)
   {
