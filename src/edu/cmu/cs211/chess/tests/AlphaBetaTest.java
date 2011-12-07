@@ -29,4 +29,20 @@ public class AlphaBetaTest {
                 new String[] {"f8f1"});
     }
 
+    @Test (timeout = 1000)
+       public void frontDeskDepth3Test () {
+           TestUtil.alphaBetaTest ("3r1b2/pk3p2/3Ppq1n/P1p4r/1p2b1p1/BP1B3P/2QPnP2/R4KR1 w h -",3,
+                   new String[] {"d3e4"});
+       }
+
+
+
+    @Test (timeout = 1000)
+       public void frontDeskDepth4Test () {
+           TestUtil.alphaBetaTest ("rN3Bn1/2p2k2/pp2p2r/2P2bpp/P3Pp1P/1P1P4/N4P2/RQ1K1B1R w - -",4,
+                   new String[] {"f8h6"});
+       }
+
+
+
 }
