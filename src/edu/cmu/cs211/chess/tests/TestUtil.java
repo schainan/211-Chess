@@ -13,6 +13,13 @@ import static org.junit.Assert.assertTrue;
 
 public class TestUtil
 {
+      private int numPieces(String fen) {
+        fen = fen.substring(0, fen.indexOf(' '));
+        fen = fen.replace("/", "");
+        fen = fen.replaceAll("\\d", "");
+        return fen.length();
+    }
+
 
 	// todo: change back
 	private static final EndGameEvaluator stu_evaluator = new EndGameEvaluator();
