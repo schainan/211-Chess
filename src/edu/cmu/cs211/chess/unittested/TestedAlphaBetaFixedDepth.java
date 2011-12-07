@@ -59,9 +59,13 @@ public class TestedAlphaBetaFixedDepth<M extends Move<M>, B extends Board<M, B>>
 		if (moves.isEmpty())
 		{
 			if (board.inCheck())
-				return -evaluator.mate();
+			{
+				return -evaluator.mate() + 1;
+			}
 			else
+			{
 				return -evaluator.stalemate();
+			}
 		}
 
 		int max = Integer.MIN_VALUE + 1;
