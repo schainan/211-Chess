@@ -22,7 +22,7 @@ public class AlphaBetaQuiescent<M extends Move<M>, B extends Board<M, B>> extend
 		List<M> moves = board.generateMoves();
 		int extreme = Integer.MAX_VALUE;
 		M bestMoveSoFar = null;
-		int calculatedDepth = calculateDepth(board.countOfAllPieces());
+		int calculatedDepth = INITIAL_DEPTH;
 
 		for (M move : moves)
 		{
@@ -39,12 +39,12 @@ public class AlphaBetaQuiescent<M extends Move<M>, B extends Board<M, B>> extend
 		return bestMoveSoFar;
 	}
 
-	private int calculateDepth(int numPieces)
-	{
-		if (numPieces > 13) return INITIAL_DEPTH;
-		else if (numPieces > 6) return SECOND_DEPTH;
-		else return THIRD_DEPTH;
-	}
+//	private int calculateDepth(int numPieces)
+//	{
+//		if (numPieces > 13) return INITIAL_DEPTH;
+//		else if (numPieces > 6) return SECOND_DEPTH;
+//		else return THIRD_DEPTH;
+//	}
 
 	private int negaMax(B board, int depth, int alpha, int beta)
 	{
