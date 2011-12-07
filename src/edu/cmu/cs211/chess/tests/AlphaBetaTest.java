@@ -16,4 +16,10 @@ public class AlphaBetaTest {
 		TestUtil.alphaBetaTest ("r1bq1b1r/pppkpppp/3p4/8/8/P2PP2P/1PP2PP1/RNB1KBNR b KQ -",2,
 			new String[] {"e7e5"});
 	}
+
+   	@Test (timeout = 1000)
+	public void frontDeskDepth2Test () {
+		TestUtil.alphaBetaTest ("3r1bnr/p1pk1ppp/n3b3/3p4/1pP3P1/1P3P2/P2PP2P/RN1QKBNR w KQ -",2,
+			new String[] {"c4d5"});
+	}
 }
