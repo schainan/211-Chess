@@ -55,60 +55,154 @@ public class EndGameEvaluator implements Evaluator<ArrayBoard>
 	{
 		int whiteSum = 0, blackSum = 0;
 
-		if (board.hasCastled[ArrayBoard.BLACK]) blackSum += CASTLE_BONUS;
-		if (board.hasCastled[ArrayBoard.WHITE]) whiteSum += CASTLE_BONUS;
+		int numWhitePieces = board.countOfColor(ArrayBoard.WHITE);
+		int numBlackPieces = board.countOfColor(ArrayBoard.BLACK);
 
-		for (ArrayPiece p : board.allPiecesOfColor(ArrayBoard.WHITE))
+		if (numWhitePieces <= 5 || numBlackPieces <= 5)
 		{
-			switch (p.type())
-			{
-				case ArrayPiece.KING:
-					whiteSum += calculateWhiteKingWeight(p, board.countOfColor(ArrayBoard.WHITE), board.countOfColor(ArrayBoard.BLACK));
-					break;
-				case ArrayPiece.QUEEN:
-					whiteSum += queenval;
-					break;
-				case ArrayPiece.ROOK:
-					whiteSum += rookval;
-					break;
-				case ArrayPiece.BISHOP:
-					whiteSum += bishoppos[p.row()][p.col()] + bishopval;
-					break;
-				case ArrayPiece.KNIGHT:
-					whiteSum += knightpos[p.row()][p.col()] + knightval;
-					break;
-				case ArrayPiece.PAWN:
-					whiteSum += pawnpos[p.row()][p.col()] + pawnval;
-					break;
-			}
+			whiteSum = evalLow(board, ArrayBoard.WHITE);
+			blackSum = evalLow(board, ArrayBoard.BLACK);
+		}
+		else
+		{
+			whiteSum = evalHigh(board, ArrayBoard.WHITE);
+			blackSum = evalHigh(board, ArrayBoard.BLACK);
 		}
 
-		for (ArrayPiece p : board.allPiecesOfColor(ArrayBoard.BLACK))
-		{
-			switch (p.type())
-			{
-				case ArrayPiece.KING:
-					blackSum += calculateBlackKingWeight(p, board.countOfColor(ArrayBoard.WHITE), board.countOfColor(ArrayBoard.BLACK));
-					break;
-				case ArrayPiece.QUEEN:
-					blackSum += queenval;
-					break;
-				case ArrayPiece.ROOK:
-					blackSum += rookval;
-					break;
-				case ArrayPiece.BISHOP:
-					blackSum += bishoppos[7 - p.row()][p.col()] + bishopval;
-					break;
-				case ArrayPiece.KNIGHT:
-					blackSum += knightpos[7 - p.row()][p.col()] + knightval;
-					break;
-				case ArrayPiece.PAWN:
-					blackSum += pawnpos[7 - p.row()][p.col()] + pawnval;
-					break;
-			}
-		}
 
 		return (board.toPlay() == ArrayBoard.WHITE) ? (whiteSum - blackSum) : (blackSum - whiteSum);
+	}
+
+
+	private int evalLow(ArrayBoard board, int color)
+	{
+
+		if (color == ArrayBoard.WHITE)
+		{
+			int whiteSum = 0;
+			if (board.hasCastled[ArrayBoard.WHITE]) whiteSum += CASTLE_BONUS;
+
+			for (ArrayPiece p : board.allPiecesOfColor(ArrayBoard.WHITE))
+			{
+				switch (p.type())
+				{
+					case ArrayPiece.KING:
+						whiteSum += 4 * (calculateWhiteKingWeight(p, board.countOfColor(ArrayBoard.WHITE),
+								board.countOfColor(ArrayBoard.BLACK)));
+						break;
+					case ArrayPiece.QUEEN:
+						whiteSum += 2 * queenval;
+						break;
+					case ArrayPiece.ROOK:
+						whiteSum += 2 * rookval;
+						break;
+					case ArrayPiece.BISHOP:
+						whiteSum += 2 * (bishoppos[p.row()][p.col()] + bishopval);
+						break;
+					case ArrayPiece.KNIGHT:
+						whiteSum += 2 * (knightpos[p.row()][p.col()] + knightval);
+						break;
+					case ArrayPiece.PAWN:
+						whiteSum += 2 * (pawnpos[p.row()][p.col()] + pawnval);
+						break;
+				}
+			}
+			return whiteSum;
+		}
+		else
+		{
+			int blackSum = 0;
+			for (ArrayPiece p : board.allPiecesOfColor(ArrayBoard.BLACK))
+			{
+				switch (p.type())
+				{
+					case ArrayPiece.KING:
+						blackSum += 4 * (calculateBlackKingWeight(p, board.countOfColor(ArrayBoard.WHITE),
+								board.countOfColor(ArrayBoard.BLACK)));
+						break;
+					case ArrayPiece.QUEEN:
+						blackSum += 2 * queenval;
+						break;
+					case ArrayPiece.ROOK:
+						blackSum += 2 * rookval;
+						break;
+					case ArrayPiece.BISHOP:
+						blackSum += 2 * (bishoppos[7 - p.row()][p.col()] + bishopval);
+						break;
+					case ArrayPiece.KNIGHT:
+						blackSum += 2 * (knightpos[7 - p.row()][p.col()] + knightval);
+						break;
+					case ArrayPiece.PAWN:
+						blackSum += 2 * (pawnpos[7 - p.row()][p.col()] + pawnval);
+						break;
+				}
+			}
+			return blackSum;
+		}
+	}
+
+
+	private int evalHigh(ArrayBoard board, int color)
+	{
+		if (color == ArrayBoard.WHITE)
+		{
+			int whiteSum = 0;
+			if (board.hasCastled[ArrayBoard.WHITE]) whiteSum += CASTLE_BONUS;
+			for (ArrayPiece p : board.allPiecesOfColor(ArrayBoard.WHITE))
+			{
+				switch (p.type())
+				{
+					case ArrayPiece.KING:
+						whiteSum += kingval;
+						break;
+					case ArrayPiece.QUEEN:
+						whiteSum += queenval;
+						break;
+					case ArrayPiece.ROOK:
+						whiteSum += rookval;
+						break;
+					case ArrayPiece.BISHOP:
+						whiteSum += bishoppos[p.row()][p.col()] + bishopval;
+						break;
+					case ArrayPiece.KNIGHT:
+						whiteSum += knightpos[p.row()][p.col()] + knightval;
+						break;
+					case ArrayPiece.PAWN:
+						whiteSum += pawnpos[p.row()][p.col()] + pawnval;
+						break;
+				}
+			}
+			return whiteSum;
+		}
+		else
+		{
+			int blackSum = 0;
+			for (ArrayPiece p : board.allPiecesOfColor(ArrayBoard.BLACK))
+			{
+				switch (p.type())
+				{
+					case ArrayPiece.KING:
+						blackSum += kingval;
+						break;
+					case ArrayPiece.QUEEN:
+						blackSum += queenval;
+						break;
+					case ArrayPiece.ROOK:
+						blackSum += rookval;
+						break;
+					case ArrayPiece.BISHOP:
+						blackSum += bishoppos[7 - p.row()][p.col()] + bishopval;
+						break;
+					case ArrayPiece.KNIGHT:
+						blackSum += knightpos[7 - p.row()][p.col()] + knightval;
+						break;
+					case ArrayPiece.PAWN:
+						blackSum += pawnpos[7 - p.row()][p.col()] + pawnval;
+						break;
+				}
+			}
+			return blackSum;
+		}
 	}
 
 	private int calculateWhiteKingWeight(ArrayPiece whiteKing, int whiteCount, int blackCount)
@@ -203,6 +297,7 @@ public class EndGameEvaluator implements Evaluator<ArrayBoard>
 	private static final int bishopval = 300;
 	private static final int knightval = 300;
 	private static final int pawnval = 100;
+
 
 	/* The bonus for castling */
 	private static final int CASTLE_BONUS = 10;

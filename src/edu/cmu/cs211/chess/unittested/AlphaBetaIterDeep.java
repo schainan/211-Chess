@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class AlphaBetaIterDeep<M extends Move<M>, B extends Board<M, B>> extends AbstractSearcher<M, B>
 {
-	private static final int QUIESCENT_DEPTH = 0;
+	private static final int QUIESCENT_DEPTH = 1;
 	private static final int INITIAL_DEPTH = 3;
 
 	public M getBestMove(B board, int myTime, int opTime)
@@ -57,8 +57,6 @@ public class AlphaBetaIterDeep<M extends Move<M>, B extends Board<M, B>> extends
 			negaValue = negaMax(board, depth - 1, Integer.MIN_VALUE + 1,
 					Integer.MAX_VALUE, repetitionMap);
 
-			if (timer.timeup()) return null;
-
 			if (negaValue < extreme)
 			{
 				extreme = negaValue;
@@ -77,8 +75,6 @@ public class AlphaBetaIterDeep<M extends Move<M>, B extends Board<M, B>> extends
 			// don't check already checked node
 			if (move != bestPreviousMove)
 			{
-				if (timer.timeup()) return null;
-
 				board.applyMove(move);
 				HashMap<Long, Integer> repetitionMap = new HashMap<Long, Integer>();
 				repetitionMap.put(board.signature(), 1);

@@ -13,12 +13,13 @@ import static org.junit.Assert.assertTrue;
 
 public class TestUtil
 {
-      private int numPieces(String fen) {
-        fen = fen.substring(0, fen.indexOf(' '));
-        fen = fen.replace("/", "");
-        fen = fen.replaceAll("\\d", "");
-        return fen.length();
-    }
+	private int numPieces(String fen)
+	{
+		fen = fen.substring(0, fen.indexOf(' '));
+		fen = fen.replace("/", "");
+		fen = fen.replaceAll("\\d", "");
+		return fen.length();
+	}
 
 
 	// todo: change back

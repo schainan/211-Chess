@@ -13,8 +13,8 @@ import java.util.Map;
  */
 public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> extends AbstractSearcher<M, B>
 {
-	private static final int QUIESCENT_DEPTH = 2;
-	private static final int INITIAL_DEPTH = 3;
+	private static final int QUIESCENT_DEPTH = 3;
+	private static final int[] DEPTH_ARRAY = {3, 4, 5, 6, 7};
 
 	Map<Long, Integer> repetitionMap = new HashMap<Long, Integer>();
 
@@ -24,7 +24,7 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 		List<M> moves = board.generateMoves();
 		int extreme = Integer.MAX_VALUE;
 		M bestMoveSoFar = null;
-		int calculatedDepth = INITIAL_DEPTH;
+		int calculatedDepth = calculateDepth(numPieces(board.fen()));
 
 		addDelta(board);
 		for (M move : moves)
@@ -64,12 +64,22 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 		repetitionMap.put(signature, repetitionMap.get(signature) - 1);
 	}
 
-//	private int calculateDepth(int numPieces)
-//	{
-//		if (numPieces > 13) return INITIAL_DEPTH;
-//		else if (numPieces > 6) return SECOND_DEPTH;
-//		else return THIRD_DEPTH;
-//	}
+	private int numPieces(String fen)
+	{
+		fen = fen.substring(0, fen.indexOf(' '));
+		fen = fen.replace("/", "");
+		fen = fen.replaceAll("\\d", "");
+		return fen.length();
+	}
+
+	private int calculateDepth(int numPieces)
+	{
+		if (numPieces > 12) return DEPTH_ARRAY[0];
+		else if (numPieces > 8) return DEPTH_ARRAY[1];
+		else if (numPieces > 5) return DEPTH_ARRAY[2];
+		else if (numPieces > 3) return DEPTH_ARRAY[3];
+		else return DEPTH_ARRAY[4];
+	}
 
 	private int negaMax(B board, int depth, int alpha, int beta)
 	{
