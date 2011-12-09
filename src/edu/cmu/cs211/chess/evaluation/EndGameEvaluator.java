@@ -60,7 +60,8 @@ public class EndGameEvaluator implements Evaluator<ArrayBoard>
 			blackSum = evalHigh(board, ArrayBoard.BLACK);
 		}
 
-		return (board.toPlay() == ArrayBoard.WHITE) ? (whiteSum - blackSum) : (blackSum - whiteSum);
+		return (board.toPlay() == ArrayBoard.WHITE) ?
+				(whiteSum - blackSum) : (blackSum - whiteSum);
 	}
 
 
@@ -84,8 +85,9 @@ public class EndGameEvaluator implements Evaluator<ArrayBoard>
 				switch (p.type())
 				{
 					case ArrayPiece.KING:
-						whiteSum += 4 * (calculateWhiteKingWeight(p, board.countOfColor(ArrayBoard.WHITE),
-								board.countOfColor(ArrayBoard.BLACK)));
+						whiteSum += 4 * (calculateWhiteKingWeight
+								(p, board.countOfColor(ArrayBoard.WHITE),
+										board.countOfColor(ArrayBoard.BLACK)));
 						break;
 					case ArrayPiece.QUEEN:
 						whiteSum += 2 * queenval;
@@ -114,8 +116,9 @@ public class EndGameEvaluator implements Evaluator<ArrayBoard>
 				switch (p.type())
 				{
 					case ArrayPiece.KING:
-						blackSum += 4 * (calculateBlackKingWeight(p, board.countOfColor(ArrayBoard.WHITE),
-								board.countOfColor(ArrayBoard.BLACK)));
+						blackSum += 4 * (calculateBlackKingWeight
+								(p, board.countOfColor(ArrayBoard.WHITE),
+										board.countOfColor(ArrayBoard.BLACK)));
 						break;
 					case ArrayPiece.QUEEN:
 						blackSum += 2 * queenval;
@@ -211,7 +214,8 @@ public class EndGameEvaluator implements Evaluator<ArrayBoard>
 		}
 	}
 
-	private int calculateWhiteKingWeight(ArrayPiece whiteKing, int whiteCount, int blackCount)
+	private int calculateWhiteKingWeight
+			(ArrayPiece whiteKing, int whiteCount, int blackCount)
 	{
 		if (blackCount == 1) // black has only king left
 			return kingpos[whiteKing.row()][whiteKing.col()] + kingval;
@@ -222,7 +226,8 @@ public class EndGameEvaluator implements Evaluator<ArrayBoard>
 			return kingval - kingpos[whiteKing.row()][whiteKing.col()];
 	}
 
-	private int calculateBlackKingWeight(ArrayPiece blackKing, int whiteCount, int blackCount)
+	private int calculateBlackKingWeight
+			(ArrayPiece blackKing, int whiteCount, int blackCount)
 	{
 
 		if (whiteCount == 1) // white has only king left

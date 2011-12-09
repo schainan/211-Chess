@@ -27,26 +27,26 @@ public class TestedEvaluator implements Evaluator<ArrayBoard>
 	}
 
 	/*
-			  * This is the evaluator. It simply returns a score for the board position
-			  * with respect to the player to move. It must function precisely as
-			  * described here in order to pass the unit tests. [If you want to use a
-			  * different evaluation function for a more advanced version of your
-			  * program, you can do that, but the eval() method here must function as
-			  * described.]
-			  *
-			  * The evaluation function gives a score for each piece according to the
-			  * pieceValue array below, and an additional amount for each piece depending
-			  * on where it is (see comment below). A bonus of 10 points should be given
-			  * if the current player has castled (and -10 for the opponent castling)
-			  *
-			  * The eval of a position is the value of the pieces of the player whose
-			  * turn it is, minus the value of the pieces of the other player (plus the
-			  * castling points thrown in).
-			  *
-			  * If it's WHITE's turn, and white is up a queen, then the value will be
-			  * roughly 900. If it's BLACK's turn and white is up a queen, then the value
-			  * returned should be about -900.
-			  */
+	* This is the evaluator. It simply returns a score for the board position
+	* with respect to the player to move. It must function precisely as
+	* described here in order to pass the unit tests. [If you want to use a
+	* different evaluation function for a more advanced version of your
+	* program, you can do that, but the eval() method here must function as
+	* described.]
+	*
+	* The evaluation function gives a score for each piece according to the
+	* pieceValue array below, and an additional amount for each piece depending
+	* on where it is (see comment below). A bonus of 10 points should be given
+	* if the current player has castled (and -10 for the opponent castling)
+	*
+	* The eval of a position is the value of the pieces of the player whose
+	* turn it is, minus the value of the pieces of the other player (plus the
+	* castling points thrown in).
+	*
+	* If it's WHITE's turn, and white is up a queen, then the value will be
+	* roughly 900. If it's BLACK's turn and white is up a queen, then the value
+	* returned should be about -900.
+	*/
 
 	/*
 		 * eval

@@ -19,7 +19,9 @@ import java.util.Map;
  * 2. repetition detection
  * 3. selective depth selection based on number of pieces
  */
-public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> extends AbstractSearcher<M, B>
+public class AlphaBetaQuiescentRep
+		<M extends Move<M>, B extends Board<M, B>>
+		extends AbstractSearcher<M, B>
 {
 	// as the game progresses and the number of pieces on the board increases,
 	// use the different depths in DEPTH_ARRAY. Uses cutoffs from CUTOFF_ARRAY
@@ -69,7 +71,8 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 				return move;
 			}
 			// this is the same basic structure as our unit-tested negaMax.
-			negaValue = negaMax(board, calculatedDepth - 1, Integer.MIN_VALUE + 1, Integer.MAX_VALUE);
+			negaValue = negaMax(board, calculatedDepth - 1,
+					Integer.MIN_VALUE + 1, Integer.MAX_VALUE);
 			if (negaValue < extreme)
 			{
 				extreme = negaValue;
@@ -189,7 +192,8 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 		// move would result in a stalemate by the repetition rule. we give
 		// this a 0 value so that the only thing it is preferred to is
 		// checkmate.
-		if ((repetitionMap.containsKey(signature)) && (repetitionMap.get(signature) == 2))
+		if ((repetitionMap.containsKey(signature)) &&
+				(repetitionMap.get(signature) == 2))
 			return 0;
 		addDelta(board);
 
