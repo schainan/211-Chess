@@ -3,10 +3,10 @@ package edu.cmu.cs211.chess.engine;
 import edu.cmu.cs211.chess.board.ArrayBoard;
 import edu.cmu.cs211.chess.board.ArrayMove;
 import edu.cmu.cs211.chess.board.Board;
+import edu.cmu.cs211.chess.search.AlphaBetaQuiescentRep;
 import edu.cmu.cs211.chess.search.Searcher;
 import edu.cmu.cs211.chess.server.Hub;
-import edu.cmu.cs211.chess.unittested.AlphaBetaQuiescentRep;
-import edu.cmu.cs211.chess.unittested.EndGameEvaluator;
+import edu.cmu.cs211.chess.evaluation.EndGameEvaluator;
 
 import java.util.Observer;
 

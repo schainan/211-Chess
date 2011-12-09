@@ -1,22 +1,20 @@
-package edu.cmu.cs211.chess.unittested;
+package edu.cmu.cs211.chess.search;
 
 import edu.cmu.cs211.chess.board.Board;
 import edu.cmu.cs211.chess.board.Move;
 import edu.cmu.cs211.chess.search.AbstractSearcher;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /*
  * quiescent searching implemented
  */
-public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> extends AbstractSearcher<M, B>
+public class AlphaBetaQuiescent<M extends Move<M>, B extends Board<M, B>> extends AbstractSearcher<M, B>
 {
-	private static final int QUIESCENT_DEPTH = 3;
-	private static final int[] DEPTH_ARRAY = {3, 4, 5, 6, 7};
-
-	Map<Long, Integer> repetitionMap = new HashMap<Long, Integer>();
+	private static final int QUIESCENT_DEPTH = 2;
+	private static final int INITIAL_DEPTH = 3;
+	private static final int SECOND_DEPTH = 4;
+	private static final int THIRD_DEPTH = 5;
 
 	public M getBestMove(B board, int myTime, int opTime)
 	{
@@ -24,9 +22,8 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 		List<M> moves = board.generateMoves();
 		int extreme = Integer.MAX_VALUE;
 		M bestMoveSoFar = null;
-		int calculatedDepth = calculateDepth(numPieces(board.fen()));
+		int calculatedDepth = INITIAL_DEPTH;
 
-		addDelta(board);
 		for (M move : moves)
 		{
 			board.applyMove(move);
@@ -39,60 +36,20 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 			}
 			board.undoMove();
 		}
-		board.applyMove(bestMoveSoFar);
-		addDelta(board);
-		board.undoMove();
-
 		return bestMoveSoFar;
 	}
 
-	private void addDelta(B board)
-	{
-
-		Long signature = board.signature();
-
-		// if the count of map is not null (0)
-		if (repetitionMap.containsKey(signature))
-			repetitionMap.put(signature, repetitionMap.get(signature) + 1);
-		else
-			repetitionMap.put(signature, 1);
-	}
-
-	public void removeDelta(B board)
-	{
-		Long signature = board.signature();
-		repetitionMap.put(signature, repetitionMap.get(signature) - 1);
-	}
-
-	private int numPieces(String fen)
-	{
-		fen = fen.substring(0, fen.indexOf(' '));
-		fen = fen.replace("/", "");
-		fen = fen.replaceAll("\\d", "");
-		return fen.length();
-	}
-
-	private int calculateDepth(int numPieces)
-	{
-		if (numPieces > 12) return DEPTH_ARRAY[0];
-		else if (numPieces > 8) return DEPTH_ARRAY[1];
-		else if (numPieces > 5) return DEPTH_ARRAY[2];
-		else if (numPieces > 3) return DEPTH_ARRAY[3];
-		else return DEPTH_ARRAY[4];
-	}
+//	private int calculateDepth(int numPieces)
+//	{
+//		if (numPieces > 13) return INITIAL_DEPTH;
+//		else if (numPieces > 6) return SECOND_DEPTH;
+//		else return THIRD_DEPTH;
+//	}
 
 	private int negaMax(B board, int depth, int alpha, int beta)
 	{
-
 		if (depth == 0)
 			return quiesce(board, alpha, beta, QUIESCENT_DEPTH);
-
-		long signature = board.signature();
-
-		if ((repetitionMap.containsKey(signature)) && (repetitionMap.get(signature) == 2))
-			return 0;
-
-		addDelta(board);
 
 		List<M> moves = board.generateMoves();
 
@@ -113,15 +70,13 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 			if (alpha >= beta)
 				break; // prune
 		}
-		removeDelta(board);
 		return alpha;
-
 	}
 
 	private int quiesce(B board, int alpha, int beta, int depth)
 	{
-
 		int standPat = evaluator.eval(board);
+
 		if (depth == 0) return standPat;
 
 		List<M> moves = board.generateMoves();
@@ -139,6 +94,7 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 
 		if (alpha < standPat)
 			alpha = standPat;
+
 
 		int score;
 		for (M move : moves)

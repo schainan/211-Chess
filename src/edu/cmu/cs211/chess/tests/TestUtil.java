@@ -2,8 +2,8 @@ package edu.cmu.cs211.chess.tests;
 
 import edu.cmu.cs211.chess.board.ArrayBoard;
 import edu.cmu.cs211.chess.board.ArrayMove;
-import edu.cmu.cs211.chess.unittested.AlphaBetaQuiescent;
-import edu.cmu.cs211.chess.unittested.EndGameEvaluator;
+import edu.cmu.cs211.chess.search.AlphaBetaQuiescent;
+import edu.cmu.cs211.chess.evaluation.EndGameEvaluator;
 
 import java.util.Arrays;
 import java.util.List;
