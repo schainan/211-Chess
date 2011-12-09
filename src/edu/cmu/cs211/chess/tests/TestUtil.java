@@ -2,8 +2,8 @@ package edu.cmu.cs211.chess.tests;
 
 import edu.cmu.cs211.chess.board.ArrayBoard;
 import edu.cmu.cs211.chess.board.ArrayMove;
-import edu.cmu.cs211.chess.search.AlphaBetaQuiescent;
-import edu.cmu.cs211.chess.evaluation.EndGameEvaluator;
+import edu.cmu.cs211.chess.unittested.TestedAlphaBetaFixedDepth;
+import edu.cmu.cs211.chess.unittested.TestedEvaluator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,8 +22,7 @@ public class TestUtil
 	}
 
 
-	// todo: change back
-	private static final EndGameEvaluator stu_evaluator = new EndGameEvaluator();
+	private static final TestedEvaluator stu_evaluator = new TestedEvaluator();
 
 	public static void evaluatorTest(String fen, int value)
 	{
@@ -35,13 +34,12 @@ public class TestUtil
 		);
 	}
 
-	// todo: change back
 	public static void alphaBetaTest(String fen, int depth, String[] validMoves)
 	{
 		ArrayBoard
 				student = ArrayBoard.FACTORY.create().init(fen);
-		AlphaBetaQuiescent<ArrayMove, ArrayBoard>
-				ab = new AlphaBetaQuiescent<ArrayMove, ArrayBoard>();
+		TestedAlphaBetaFixedDepth<ArrayMove, ArrayBoard>
+				ab = new TestedAlphaBetaFixedDepth<ArrayMove, ArrayBoard>();
 
 		ab.setEvaluator(stu_evaluator);
 		ab.setFixedDepth(depth);

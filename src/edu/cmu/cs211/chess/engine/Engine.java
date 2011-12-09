@@ -4,6 +4,7 @@ import edu.cmu.cs211.chess.board.ArrayBoard;
 import edu.cmu.cs211.chess.board.ArrayMove;
 import edu.cmu.cs211.chess.board.Board;
 import edu.cmu.cs211.chess.evaluation.EndGameEvaluator;
+import edu.cmu.cs211.chess.search.AlphaBetaQuiescentRep;
 import edu.cmu.cs211.chess.search.Searcher;
 import edu.cmu.cs211.chess.server.Hub;
 

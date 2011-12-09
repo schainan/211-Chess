@@ -1,8 +1,7 @@
-package edu.cmu.cs211.chess.unittested;
+package edu.cmu.cs211.chess.search;
 
 import edu.cmu.cs211.chess.board.Board;
 import edu.cmu.cs211.chess.board.Move;
-import edu.cmu.cs211.chess.search.AbstractSearcher;
 
 import java.util.HashMap;
 import java.util.List;
@@ -113,7 +112,10 @@ public class AlphaBetaQuiescentRep<M extends Move<M>, B extends Board<M, B>> ext
 	public void removeDelta(B board)
 	{
 		Long signature = board.signature();
-		repetitionMap.put(signature, repetitionMap.get(signature) - 1);
+
+		if (repetitionMap.get(signature) != null)
+			repetitionMap.put(signature, repetitionMap.get(signature) - 1);
+		else return;
 
 		if (repetitionMap.get(signature) <= 0)
 			repetitionMap.remove(signature);
