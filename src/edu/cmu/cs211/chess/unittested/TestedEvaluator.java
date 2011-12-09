@@ -120,23 +120,24 @@ public class TestedEvaluator implements Evaluator<ArrayBoard>
 
 		//depending on whose turn it is, set the sign of the returned value
 		// accordingly.
-		return (board.toPlay() == ArrayBoard.WHITE) ? (whiteSum - blackSum) : (blackSum - whiteSum);
+		return (board.toPlay() == ArrayBoard.WHITE) ?
+				(whiteSum - blackSum) : (blackSum - whiteSum);
 	}
 
 	/*
-			  * Piece value tables modify the value of each piece according to where it
-			  * is on the board.
-			  *
-			  * To orient these tables, each row of 8 represents one row (rank) of the
-			  * chessboard.
-			  *
-			  * !!! The first row is where white's pieces start !!!
-			  *
-			  * So, for example
-			  * having a pawn at d2 is worth -5 for white. Having it at d7 is worth
-			  * 20. Note that these have to be flipped over to evaluate black's pawns
-			  * since pawn values are not symmetric.
-			  */
+	* Piece value tables modify the value of each piece according to where it
+	* is on the board.
+	*
+	* To orient these tables, each row of 8 represents one row (rank) of the
+	* chessboard.
+	*
+	* !!! The first row is where white's pieces start !!!
+	*
+	* So, for example
+	* having a pawn at d2 is worth -5 for white. Having it at d7 is worth
+	* 20. Note that these have to be flipped over to evaluate black's pawns
+	* since pawn values are not symmetric.
+	*/
 	private static int bishoppos[][] =
 			{
 					{-5, -5, -5, -5, -5, -5, -5, -5},

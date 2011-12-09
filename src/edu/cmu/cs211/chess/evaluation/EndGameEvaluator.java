@@ -235,20 +235,6 @@ public class EndGameEvaluator implements Evaluator<ArrayBoard>
 	}
 
 
-	/*
-		  * Piece value tables modify the value of each piece according to where it
-		  * is on the board.
-		  *
-		  * To orient these tables, each row of 8 represents one row (rank) of the
-		  * chessboard.
-		  *
-		  * !!! The first row is where white's pieces start !!!
-		  *
-		  * So, for example
-		  * having a pawn at d2 is worth -5 for white. Having it at d7 is worth
-		  * 20. Note that these have to be flipped over to evaluate black's pawns
-		  * since pawn values are not symmetric.
-		  */
 	private static int bishoppos[][] =
 			{
 					{-5, -5, -5, -5, -5, -5, -5, -5},
@@ -286,14 +272,14 @@ public class EndGameEvaluator implements Evaluator<ArrayBoard>
 	private static int kingpos[][] =
 
 			{
-					{1, 0, -1, -2, -2, -1, 0, 1},
-					{0, -1, -2, -3, -3, -2, -1, 0},
-					{-1, -2, -3, -4, -4, -3, -2, -1},
-					{-2, -3, -4, -5, -5, -4, -3, -2},
-					{-2, -3, -4, -5, -5, -4, -3, -2},
-					{-1, -2, -3, -4, -4, -3, -2, -1},
-					{0, -1, -2, -3, -3, -2, -1, 0},
-					{1, 0, -1, -2, -2, -1, 0, 1}
+					{3, 0, -1, -2, -2, -1, 0, 3},
+					{2, -1, -2, -3, -3, -2, -1, 2},
+					{1, -2, -3, -4, -4, -3, -2, 1},
+					{0, -3, -4, -5, -5, -4, -3, 0},
+					{0, -3, -4, -5, -5, -4, -3, 0},
+					{1, -2, -3, -4, -4, -3, -2, 1},
+					{2, -1, -2, -3, -3, -2, -1, 2},
+					{3, 0, -1, -2, -2, -1, 0, 3}
 			};
 
 
